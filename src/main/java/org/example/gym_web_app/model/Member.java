@@ -26,8 +26,9 @@ public class Member {
 
     public Member() {}
 
-    public Member(String firstName, String email, LocalDate dateOfBirth, String membershipType) {
+    public Member(String firstName, String lastName, String email, LocalDate dateOfBirth, String membershipType) {
         this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.membershipType = membershipType;
