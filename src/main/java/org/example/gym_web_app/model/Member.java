@@ -12,7 +12,10 @@ public class Member {
     @Column(nullable = false)
     private String firstName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(nullable = false)
     private String email;
 
     private LocalDate dateOfBirth;
@@ -44,6 +47,14 @@ public class Member {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
