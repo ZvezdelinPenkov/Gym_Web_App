@@ -1,6 +1,7 @@
 package org.example.gym_web_app.model;
 
 import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
 
