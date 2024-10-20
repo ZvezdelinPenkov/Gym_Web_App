@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class MemberService {
+
     @Autowired
     private MemberRepository memberRepository;
 
@@ -22,12 +23,14 @@ public class MemberService {
     }
 
     public Member addMember(Member member) {
+        if (member.getEmail() == null || member.getFirstName() == null || member.getLastName() == null) {
+            throw new IllegalArgumentException("Member details are incomplete");
+        }
         return memberRepository.save(member);
     }
 
     public Member updateMember(Long id, Member memberDetails) {
         Optional<Member> optionalMember = memberRepository.findById(id);
-
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
             member.setFirstName(memberDetails.getFirstName());
@@ -42,6 +45,10 @@ public class MemberService {
     }
 
     public void deleteMember(Long id) {
-        memberRepository.deleteById(id);
+        if (memberRepository.existsById(id)) {
+            memberRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Member not found with id " + id);
+        }
     }
 }
