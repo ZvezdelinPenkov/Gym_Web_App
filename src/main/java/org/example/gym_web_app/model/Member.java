@@ -1,13 +1,18 @@
 package org.example.gym_web_app.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    private Long id;
 
     @Column(nullable = false)
     private String firstName;
@@ -15,7 +20,8 @@ public class Member {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
+
+    @Column(unique = true, nullable = false)
     private String email;
 
     private LocalDate dateOfBirth;
@@ -24,7 +30,22 @@ public class Member {
 
     private boolean active = true;
 
-    public Member() {}
+    @Setter
+    @Getter
+    @ManyToMany
+    @JoinTable(
+            name = "member_class_schedule",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "class_schedule_id")
+    )
+    private Set<ClassSchedule> classSchedules = new HashSet<>();
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    public Member() {
+    }
 
     public Member(String firstName, String lastName, String email, LocalDate dateOfBirth, String membershipType) {
         this.firstName = firstName;
