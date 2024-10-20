@@ -1,8 +1,13 @@
 package org.example.gym_web_app.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity
 public class Attendance {
 
@@ -28,35 +33,4 @@ public class Attendance {
         this.attendanceTime = attendanceTime;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public ClassSchedule getClassSchedule() {
-        return classSchedule;
-    }
-
-    public void setClassSchedule(ClassSchedule classSchedule) {
-        this.classSchedule = classSchedule;
-    }
-
-    public LocalDateTime getAttendanceTime() {
-        return attendanceTime;
-    }
-
-    public void setAttendanceTime(LocalDateTime attendanceTime) {
-        this.attendanceTime = attendanceTime;
-    }
 }
