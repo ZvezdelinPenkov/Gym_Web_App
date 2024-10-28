@@ -2,11 +2,14 @@ package org.example.gym_web_app.model;
 
 import jakarta.persistence.*;
 
+
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
 public class Users {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +32,7 @@ public class Users {
         this.username = username;
         this.password = password;
     }
+
     public Long getId() {
         return id;
     }
