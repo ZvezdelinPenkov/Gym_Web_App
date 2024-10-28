@@ -26,9 +26,10 @@ public class Member {
 
     private LocalDate dateOfBirth;
 
+    @Column(nullable = false)
+    private LocalDate joinDate = LocalDate.now();
 
     private String membershipType;
-
 
     private boolean active = true;
 
@@ -43,7 +44,7 @@ public class Member {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private Users user;
 
     public Member() {
     }
@@ -54,6 +55,12 @@ public class Member {
         this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.membershipType = membershipType;
+        this.joinDate = LocalDate.now();
+    }
+
+    public Member(String firstName, String lastName, String email, LocalDate dateOfBirth, String membershipType, LocalDate joinDate) {
+        this(firstName, lastName, email, dateOfBirth, membershipType);
+        this.joinDate = joinDate;
     }
 
     public Long getId() {
@@ -96,6 +103,14 @@ public class Member {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public LocalDate getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(LocalDate joinDate) {
+        this.joinDate = joinDate;
+    }
+
     public String getMembershipType() {
         return membershipType;
     }
@@ -120,11 +135,11 @@ public class Member {
         this.classSchedules = classSchedules;
     }
 
-    public User getUser() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 }
