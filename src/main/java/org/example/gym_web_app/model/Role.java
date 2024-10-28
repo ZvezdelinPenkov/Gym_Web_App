@@ -1,13 +1,9 @@
 package org.example.gym_web_app.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Set;
 
-@Setter
-@Getter
 @Entity
 public class Role {
 
@@ -26,5 +22,27 @@ public class Role {
     public Role(String name) {
         this.name = name;
     }
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Users> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<Users> users) {
+        this.users = users;
+    }
 }

@@ -1,14 +1,12 @@
 package org.example.gym_web_app.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Setter
-@Getter
+
 @Entity
 public class Users {
 
@@ -33,6 +31,14 @@ public class Users {
     public Users(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
