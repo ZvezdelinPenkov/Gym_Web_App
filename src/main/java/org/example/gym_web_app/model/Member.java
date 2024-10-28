@@ -2,21 +2,20 @@ package org.example.gym_web_app.model;
 
 import jakarta.persistence.*;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String firstName;
+
 
     @Column(nullable = false)
     private String lastName;
@@ -27,12 +26,13 @@ public class Member {
 
     private LocalDate dateOfBirth;
 
+
     private String membershipType;
+
 
     private boolean active = true;
 
-    @Setter
-    @Getter
+
     @ManyToMany
     @JoinTable(
             name = "member_class_schedule",
@@ -112,4 +112,19 @@ public class Member {
         this.active = active;
     }
 
+    public Set<ClassSchedule> getClassSchedules() {
+        return classSchedules;
+    }
+
+    public void setClassSchedules(Set<ClassSchedule> classSchedules) {
+        this.classSchedules = classSchedules;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
