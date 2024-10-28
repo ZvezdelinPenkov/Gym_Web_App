@@ -1,30 +1,53 @@
 package org.example.gym_web_app.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    private Long id;
 
     @Column(nullable = false)
     private String firstName;
 
+
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
+
+    @Column(unique = true, nullable = false)
     private String email;
 
     private LocalDate dateOfBirth;
+
+    @Column(nullable = false)
+    private LocalDate joinDate = LocalDate.now();
 
     private String membershipType;
 
     private boolean active = true;
 
-    public Member() {}
+
+    @ManyToMany
+    @JoinTable(
+            name = "member_class_schedule",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "class_schedule_id")
+    )
+    private Set<ClassSchedule> classSchedules = new HashSet<>();
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private Users user;
+
+    public Member() {
+    }
 
     public Member(String firstName, String lastName, String email, LocalDate dateOfBirth, String membershipType) {
         this.firstName = firstName;
@@ -32,6 +55,12 @@ public class Member {
         this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.membershipType = membershipType;
+        this.joinDate = LocalDate.now();
+    }
+
+    public Member(String firstName, String lastName, String email, LocalDate dateOfBirth, String membershipType, LocalDate joinDate) {
+        this(firstName, lastName, email, dateOfBirth, membershipType);
+        this.joinDate = joinDate;
     }
 
     public Long getId() {
@@ -74,6 +103,14 @@ public class Member {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public LocalDate getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(LocalDate joinDate) {
+        this.joinDate = joinDate;
+    }
+
     public String getMembershipType() {
         return membershipType;
     }
@@ -90,4 +127,19 @@ public class Member {
         this.active = active;
     }
 
+    public Set<ClassSchedule> getClassSchedules() {
+        return classSchedules;
+    }
+
+    public void setClassSchedules(Set<ClassSchedule> classSchedules) {
+        this.classSchedules = classSchedules;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
 }

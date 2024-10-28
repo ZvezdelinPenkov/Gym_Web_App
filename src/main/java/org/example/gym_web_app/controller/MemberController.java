@@ -38,8 +38,8 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Member> deleteMember(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
