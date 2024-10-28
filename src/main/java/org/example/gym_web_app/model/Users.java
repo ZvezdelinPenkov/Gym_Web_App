@@ -10,7 +10,7 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
-public class User {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +28,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User() {}
+    public Users() {}
 
-    public User(String username, String password) {
+    public Users(String username, String password) {
         this.username = username;
         this.password = password;
     }

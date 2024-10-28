@@ -1,6 +1,6 @@
 package org.example.gym_web_app.controller;
 
-import org.example.gym_web_app.model.User;
+import org.example.gym_web_app.model.Users;
 import org.example.gym_web_app.repository.UserRepository;
 import org.example.gym_web_app.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +31,19 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public ResponseEntity<?> registerUser(@RequestBody Users users) {
+        users.setPassword(passwordEncoder.encode(users.getPassword()));
+        userRepository.save(users);
         return ResponseEntity.ok("User registered successfully!");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
+    public ResponseEntity<?> loginUser(@RequestBody Users users) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+                new UsernamePasswordAuthenticationToken(users.getUsername(), users.getPassword())
         );
 
-        String jwt = jwtUtil.generateToken(user.getUsername());
+        String jwt = jwtUtil.generateToken(users.getUsername());
 
         Map<String, String> response = new HashMap<>();
         response.put("jwt", jwt);
