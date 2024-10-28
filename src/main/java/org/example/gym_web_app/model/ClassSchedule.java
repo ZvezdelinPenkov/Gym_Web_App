@@ -23,6 +23,11 @@ public class ClassSchedule {
     @Column(nullable = false)
     private String trainerName;
 
+    @Column(nullable = false)
+    private int capacity;
+
+    private int durationMinutes;
+
     private LocalDateTime scheduledTime;
 
     @OneToMany(mappedBy = "classSchedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
