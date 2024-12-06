@@ -59,16 +59,4 @@ public class MemberService {
             throw new RuntimeException("Member not found with id " + id);
         }
     }
-
-    private void validateMember(Member member) {
-        if (member.getEmail() == null || member.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or empty");
-        }
-        if (member.getFirstName() == null || member.getFirstName().isBlank()) {
-            throw new IllegalArgumentException("First name cannot be null or empty");
-        }
-        if (member.getLastName() == null || member.getLastName().isBlank()) {
-            throw new IllegalArgumentException("Last name cannot be null or empty");
-        }
-    }
 }
