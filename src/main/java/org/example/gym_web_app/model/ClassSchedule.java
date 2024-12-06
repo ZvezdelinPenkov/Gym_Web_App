@@ -1,11 +1,8 @@
 package org.example.gym_web_app.model;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.HashSet;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 public class ClassSchedule {
@@ -14,28 +11,29 @@ public class ClassSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String className;
+    @ManyToOne
+    @JoinColumn(name = "class_id", referencedColumnName = "id", nullable = false)
+    private Class classEntity;
 
     @Column(nullable = false)
-    private String trainerName;
+    private LocalDate date;
 
-    private LocalDateTime scheduledTime;
+    @Column(nullable = false, name = "start_time")
+    private LocalTime startTime;
 
-    @OneToMany(mappedBy = "classSchedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Attendance> attendances = new HashSet<>();
-
-    @ManyToMany(mappedBy = "classSchedules", fetch = FetchType.LAZY)
-    private Set<Member> members = new HashSet<>();
+    @Column(nullable = false, name = "end_time")
+    private LocalTime endTime;
 
     public ClassSchedule() {}
 
-    public ClassSchedule(String className, String trainerName, LocalDateTime scheduledTime) {
-        this.className = className;
-        this.trainerName = trainerName;
-        this.scheduledTime = scheduledTime;
+    public ClassSchedule(Class classEntity, LocalDate date, LocalTime startTime, LocalTime endTime) {
+        this.classEntity = classEntity;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -44,43 +42,35 @@ public class ClassSchedule {
         this.id = id;
     }
 
-    public String getClassName() {
-        return className;
+    public Class getClassEntity() {
+        return classEntity;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setClassEntity(Class classEntity) {
+        this.classEntity = classEntity;
     }
 
-    public String getTrainerName() {
-        return trainerName;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setTrainerName(String trainerName) {
-        this.trainerName = trainerName;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public LocalDateTime getScheduledTime() {
-        return scheduledTime;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setScheduledTime(LocalDateTime scheduledTime) {
-        this.scheduledTime = scheduledTime;
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
-    public Set<Attendance> getAttendances() {
-        return attendances;
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
-    public void setAttendances(Set<Attendance> attendances) {
-        this.attendances = attendances;
-    }
-
-    public Set<Member> getMembers() {
-        return members;
-    }
-
-    public void setMembers(Set<Member> members) {
-        this.members = members;
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 }
