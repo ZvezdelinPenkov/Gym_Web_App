@@ -44,7 +44,9 @@ public class Member {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+
     private Users user;
+
 
     public Member() {
     }
