@@ -1,15 +1,12 @@
 package org.example.gym_web_app.controller;
 
 import org.example.gym_web_app.dto.MemberDTO;
-import org.example.gym_web_app.model.Member;
-import org.example.gym_web_app.service.MemberMapper;
 import org.example.gym_web_app.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/members")
@@ -18,47 +15,44 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @Autowired
-    private MemberMapper memberMapper;
-
+    // Get all members
     @GetMapping
     public ResponseEntity<List<MemberDTO>> getAllMembers() {
-        List<MemberDTO> members = memberService.getAllMembers()
-                .stream()
-                .map(memberMapper::toDTO)
-                .collect(Collectors.toList());
+        List<MemberDTO> members = memberService.getAllMembers();
         return ResponseEntity.ok(members);
     }
 
+    // Get a member by ID
     @GetMapping("/{id}")
     public ResponseEntity<MemberDTO> getMemberById(@PathVariable Long id) {
         return memberService.getMemberById(id)
-                .map(member -> ResponseEntity.ok(memberMapper.toDTO(member)))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Add a new member
     @PostMapping
     public ResponseEntity<MemberDTO> addMember(@RequestBody MemberDTO memberDTO) {
         try {
-            Member member = memberMapper.toEntity(memberDTO);
-            Member createdMember = memberService.addMember(member);
-            return ResponseEntity.status(201).body(memberMapper.toDTO(createdMember));
+            MemberDTO createdMember = memberService.addMember(memberDTO);
+            return ResponseEntity.status(201).body(createdMember);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().build();
         }
     }
 
+    // Update an existing member
     @PutMapping("/{id}")
     public ResponseEntity<MemberDTO> updateMember(@PathVariable Long id, @RequestBody MemberDTO memberDTO) {
         try {
-            Member member = memberMapper.toEntity(memberDTO);
-            Member updatedMember = memberService.updateMember(id, member);
-            return ResponseEntity.ok(memberMapper.toDTO(updatedMember));
+            MemberDTO updatedMember = memberService.updateMember(id, memberDTO);
+            return ResponseEntity.ok(updatedMember);
         } catch (RuntimeException ex) {
             return ResponseEntity.notFound().build();
         }
     }
 
+    // Delete a member
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         try {
