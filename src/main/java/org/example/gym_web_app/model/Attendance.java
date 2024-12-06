@@ -21,6 +21,17 @@ public class Attendance {
 
     private LocalDateTime attendanceTime;
 
+    public boolean isAttended() {
+        return attended;
+    }
+
+    public void setAttended(boolean attended) {
+        this.attended = attended;
+    }
+
+    @Column(nullable = false)
+    private boolean attended = false;
+
     public Attendance() {}
 
     public Attendance(Member member, ClassSchedule classSchedule, LocalDateTime attendanceTime) {
