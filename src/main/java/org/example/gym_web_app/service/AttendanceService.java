@@ -30,7 +30,7 @@ public class AttendanceService {
 
     public AttendanceDTO addAttendance(AttendanceDTO attendanceDTO) {
         Attendance attendance = AttendanceMapper.toEntity(attendanceDTO);
-        // Fetch and set associated Member and ClassSchedule in the service layer
+        
         Attendance savedAttendance = attendanceRepository.save(attendance);
         return AttendanceMapper.toDTO(savedAttendance);
     }
