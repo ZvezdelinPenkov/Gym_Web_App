@@ -1,6 +1,6 @@
 package org.example.gym_web_app.controller;
 
-import org.example.gym_web_app.model.Class;
+import org.example.gym_web_app.dto.ClassDTO;
 import org.example.gym_web_app.service.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,23 +16,22 @@ public class ClassController {
     @Autowired
     private ClassService classService;
 
-
     @GetMapping
-    public ResponseEntity<List<Class>> getAllClasses() {
-        List<Class> classes = classService.getAllClasses();
+    public ResponseEntity<List<ClassDTO>> getAllClasses() {
+        List<ClassDTO> classes = classService.getAllClasses();
         return ResponseEntity.ok(classes);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Class> getClassById(@PathVariable Long id) {
-        Optional<Class> classEntity = classService.getClassById(id);
+    public ResponseEntity<ClassDTO> getClassById(@PathVariable Long id) {
+        Optional<ClassDTO> classEntity = classService.getClassById(id);
         return classEntity.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Class> addClass(@RequestBody Class classEntity) {
+    public ResponseEntity<ClassDTO> addClass(@RequestBody ClassDTO classDTO) {
         try {
-            Class createdClass = classService.addClass(classEntity);
+            ClassDTO createdClass = classService.addClass(classDTO);
             return ResponseEntity.status(201).body(createdClass);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(null);
@@ -40,9 +39,9 @@ public class ClassController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Class> updateClass(@PathVariable Long id, @RequestBody Class classDetails) {
+    public ResponseEntity<ClassDTO> updateClass(@PathVariable Long id, @RequestBody ClassDTO classDTO) {
         try {
-            Class updatedClass = classService.updateClass(id, classDetails);
+            ClassDTO updatedClass = classService.updateClass(id, classDTO);
             return ResponseEntity.ok(updatedClass);
         } catch (RuntimeException ex) {
             return ResponseEntity.notFound().build();
