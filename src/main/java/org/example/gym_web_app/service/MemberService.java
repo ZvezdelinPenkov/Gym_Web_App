@@ -23,32 +23,44 @@ public class MemberService {
     }
 
     public Member addMember(Member member) {
-        if (member.getEmail() == null || member.getFirstName() == null || member.getLastName() == null) {
-            throw new IllegalArgumentException("Member details are incomplete");
-        }
+        validateMember(member);
         return memberRepository.save(member);
     }
 
     public Member updateMember(Long id, Member memberDetails) {
         Optional<Member> optionalMember = memberRepository.findById(id);
-        if (optionalMember.isPresent()) {
-            Member member = optionalMember.get();
-            member.setFirstName(memberDetails.getFirstName());
-            member.setLastName(memberDetails.getLastName());
-            member.setEmail(memberDetails.getEmail());
-            member.setDateOfBirth(memberDetails.getDateOfBirth());
-            member.setMembershipType(memberDetails.getMembershipType());
-            return memberRepository.save(member);
+        if (optionalMember.isEmpty()) {
+            throw new RuntimeException("Member not found with id " + id);
+        }
+
+        Member member = optionalMember.get();
+        member.setFirstName(memberDetails.getFirstName());
+        member.setLastName(memberDetails.getLastName());
+        member.setEmail(memberDetails.getEmail());
+        member.setDateOfBirth(memberDetails.getDateOfBirth());
+        member.setMembershipType(memberDetails.getMembershipType());
+        member.setActive(memberDetails.isActive());
+        return memberRepository.save(member);
+    }
+
+    public boolean deleteMember(Long id) {
+        if (memberRepository.existsById(id)) {
+            memberRepository.deleteById(id);
+            return true;
         } else {
             throw new RuntimeException("Member not found with id " + id);
         }
     }
 
-    public void deleteMember(Long id) {
-        if (memberRepository.existsById(id)) {
-            memberRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Member not found with id " + id);
+    private void validateMember(Member member) {
+        if (member.getEmail() == null || member.getEmail().isBlank()) {
+            throw new IllegalArgumentException("Email cannot be null or empty");
+        }
+        if (member.getFirstName() == null || member.getFirstName().isBlank()) {
+            throw new IllegalArgumentException("First name cannot be null or empty");
+        }
+        if (member.getLastName() == null || member.getLastName().isBlank()) {
+            throw new IllegalArgumentException("Last name cannot be null or empty");
         }
     }
 }
