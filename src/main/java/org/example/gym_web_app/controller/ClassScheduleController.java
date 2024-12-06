@@ -1,6 +1,6 @@
 package org.example.gym_web_app.controller;
 
-import org.example.gym_web_app.model.ClassSchedule;
+import org.example.gym_web_app.dto.ClassScheduleDTO;
 import org.example.gym_web_app.service.ClassScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,31 +17,31 @@ public class ClassScheduleController {
     private ClassScheduleService classScheduleService;
 
     @GetMapping
-    public ResponseEntity<List<ClassSchedule>> getAllSchedules() {
-        List<ClassSchedule> schedules = classScheduleService.getAllSchedules();
+    public ResponseEntity<List<ClassScheduleDTO>> getAllSchedules() {
+        List<ClassScheduleDTO> schedules = classScheduleService.getAllSchedules();
         return ResponseEntity.ok(schedules);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClassSchedule> getScheduleById(@PathVariable Long id) {
-        Optional<ClassSchedule> schedule = classScheduleService.getScheduleById(id);
+    public ResponseEntity<ClassScheduleDTO> getScheduleById(@PathVariable Long id) {
+        Optional<ClassScheduleDTO> schedule = classScheduleService.getScheduleById(id);
         return schedule.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<ClassSchedule> addSchedule(@RequestBody ClassSchedule schedule) {
+    public ResponseEntity<ClassScheduleDTO> addSchedule(@RequestBody ClassScheduleDTO scheduleDTO) {
         try {
-            ClassSchedule createdSchedule = classScheduleService.addSchedule(schedule);
+            ClassScheduleDTO createdSchedule = classScheduleService.addSchedule(scheduleDTO);
             return ResponseEntity.status(201).body(createdSchedule);
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClassSchedule> updateSchedule(@PathVariable Long id, @RequestBody ClassSchedule scheduleDetails) {
+    public ResponseEntity<ClassScheduleDTO> updateSchedule(@PathVariable Long id, @RequestBody ClassScheduleDTO scheduleDTO) {
         try {
-            ClassSchedule updatedSchedule = classScheduleService.updateSchedule(id, scheduleDetails);
+            ClassScheduleDTO updatedSchedule = classScheduleService.updateSchedule(id, scheduleDTO);
             return ResponseEntity.ok(updatedSchedule);
         } catch (RuntimeException ex) {
             return ResponseEntity.notFound().build();
