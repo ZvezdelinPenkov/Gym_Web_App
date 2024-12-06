@@ -7,56 +7,56 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/classes")
+@RequestMapping("/api/class-schedules")
 public class ClassScheduleController {
 
     @Autowired
     private ClassScheduleService classScheduleService;
 
-    // Get all classes
     @GetMapping
-    public List<ClassSchedule> getAllClasses() {
-        return classScheduleService.getAllClasses();
+    public ResponseEntity<List<ClassSchedule>> getAllSchedules() {
+        List<ClassSchedule> schedules = classScheduleService.getAllSchedules();
+        return ResponseEntity.ok(schedules);
     }
 
-    // Get class by ID
     @GetMapping("/{id}")
-    public ResponseEntity<ClassSchedule> getClassById(@PathVariable Long id) {
-        ClassSchedule classSchedule = classScheduleService.getClassById(id);
-        if (classSchedule != null) {
-            return ResponseEntity.ok(classSchedule);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ClassSchedule> getScheduleById(@PathVariable Long id) {
+        Optional<ClassSchedule> schedule = classScheduleService.getScheduleById(id);
+        return schedule.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    // Create a new class
     @PostMapping
-    public ClassSchedule createClass(@RequestBody ClassSchedule classSchedule) {
-        return classScheduleService.createClass(classSchedule);
+    public ResponseEntity<ClassSchedule> addSchedule(@RequestBody ClassSchedule schedule) {
+        try {
+            ClassSchedule createdSchedule = classScheduleService.addSchedule(schedule);
+            return ResponseEntity.status(201).body(createdSchedule);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
-    // Update an existing class
     @PutMapping("/{id}")
-    public ResponseEntity<ClassSchedule> updateClass(@PathVariable Long id, @RequestBody ClassSchedule classDetails) {
-        ClassSchedule updatedClass = classScheduleService.updateClass(id, classDetails);
-        if (updatedClass != null) {
-            return ResponseEntity.ok(updatedClass);
-        } else {
+    public ResponseEntity<ClassSchedule> updateSchedule(@PathVariable Long id, @RequestBody ClassSchedule scheduleDetails) {
+        try {
+            ClassSchedule updatedSchedule = classScheduleService.updateSchedule(id, scheduleDetails);
+            return ResponseEntity.ok(updatedSchedule);
+        } catch (RuntimeException ex) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Delete a class
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteClass(@PathVariable Long id) {
-        boolean isDeleted = classScheduleService.deleteClass(id);
-        if (isDeleted) {
-            return ResponseEntity.ok("Class deleted successfully.");
-        } else {
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
+        try {
+            if (classScheduleService.deleteSchedule(id)) {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (RuntimeException ex) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 }
