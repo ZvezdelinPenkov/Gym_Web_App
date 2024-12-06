@@ -1,13 +1,15 @@
 package org.example.gym_web_app.service;
 
+import org.example.gym_web_app.dto.AttendanceDTO;
 import org.example.gym_web_app.model.Attendance;
 import org.example.gym_web_app.repository.AttendanceRepository;
+import org.example.gym_web_app.util.AttendanceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AttendanceService {
@@ -15,37 +17,37 @@ public class AttendanceService {
     @Autowired
     private AttendanceRepository attendanceRepository;
 
-    public List<Attendance> getAllAttendances() {
-        return attendanceRepository.findAll();
+    public List<AttendanceDTO> getAllAttendances() {
+        return attendanceRepository.findAll()
+                .stream()
+                .map(AttendanceMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-
-    public Optional<Attendance> getAttendanceById(Long id) {
-        return attendanceRepository.findById(id);
+    public Optional<AttendanceDTO> getAttendanceById(Long id) {
+        return attendanceRepository.findById(id).map(AttendanceMapper::toDTO);
     }
 
-
-    public Attendance addAttendance(Attendance attendance) {
-        validateAttendance(attendance);
-        if (attendance.getAttendanceTime() == null) {
-            attendance.setAttendanceTime(LocalDateTime.now());
-        }
-        return attendanceRepository.save(attendance);
+    public AttendanceDTO addAttendance(AttendanceDTO attendanceDTO) {
+        Attendance attendance = AttendanceMapper.toEntity(attendanceDTO);
+        // Fetch and set associated Member and ClassSchedule in the service layer
+        Attendance savedAttendance = attendanceRepository.save(attendance);
+        return AttendanceMapper.toDTO(savedAttendance);
     }
 
-
-    public Attendance updateAttendance(Long id, Attendance attendanceDetails) {
+    public AttendanceDTO updateAttendance(Long id, AttendanceDTO attendanceDTO) {
         Optional<Attendance> optionalAttendance = attendanceRepository.findById(id);
         if (optionalAttendance.isEmpty()) {
             throw new RuntimeException("Attendance not found with id " + id);
         }
 
-        Attendance existingAttendance = optionalAttendance.get();
-        existingAttendance.setMember(attendanceDetails.getMember());
-        existingAttendance.setClassSchedule(attendanceDetails.getClassSchedule());
-        existingAttendance.setAttendanceTime(attendanceDetails.getAttendanceTime());
-        existingAttendance.setAttended(attendanceDetails.isAttended());
-        return attendanceRepository.save(existingAttendance);
+        Attendance attendance = optionalAttendance.get();
+        // Update fields
+        attendance.setAttendanceTime(attendanceDTO.getAttendanceTime());
+        attendance.setAttended(attendanceDTO.isAttended());
+        // Fetch and set associated Member and ClassSchedule if needed
+        Attendance updatedAttendance = attendanceRepository.save(attendance);
+        return AttendanceMapper.toDTO(updatedAttendance);
     }
 
     public boolean deleteAttendance(Long id) {
@@ -54,15 +56,6 @@ public class AttendanceService {
             return true;
         } else {
             throw new RuntimeException("Attendance not found with id " + id);
-        }
-    }
-
-    private void validateAttendance(Attendance attendance) {
-        if (attendance.getMember() == null) {
-            throw new IllegalArgumentException("Member cannot be null");
-        }
-        if (attendance.getClassSchedule() == null) {
-            throw new IllegalArgumentException("ClassSchedule cannot be null");
         }
     }
 }
