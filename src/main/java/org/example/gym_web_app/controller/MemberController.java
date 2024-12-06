@@ -17,29 +17,46 @@ public class MemberController {
     private MemberService memberService;
 
     @GetMapping
-    public List<Member> getAllMembers() {
-        return memberService.getAllMembers();
+    public ResponseEntity<List<Member>> getAllMembers() {
+        List<Member> members = memberService.getAllMembers();
+        return ResponseEntity.ok(members);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Member> getMemberById(@PathVariable Long id) {
         Optional<Member> member = memberService.getMemberById(id);
-        return member.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return member.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<Member> addMember(@RequestBody Member member) {
-        return ResponseEntity.ok(memberService.addMember(member));
+        try {
+            Member createdMember = memberService.addMember(member);
+            return ResponseEntity.status(201).body(createdMember);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody Member memberDetails) {
-        return ResponseEntity.ok(memberService.updateMember(id, memberDetails));
+        try {
+            Member updatedMember = memberService.updateMember(id, memberDetails);
+            return ResponseEntity.ok(updatedMember);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
-        memberService.deleteMember(id);
-        return ResponseEntity.noContent().build();
+        try {
+            if (memberService.deleteMember(id)) {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
