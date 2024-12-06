@@ -1,6 +1,5 @@
 package org.example.gym_web_app.util;
 
-import org.example.gym_web_app.dto.AttendanceDTO;
 import org.example.gym_web_app.model.Attendance;
 
 public class AttendanceMapper {
