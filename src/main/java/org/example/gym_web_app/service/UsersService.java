@@ -1,7 +1,9 @@
 package org.example.gym_web_app.service;
 
+import org.example.gym_web_app.dto.UsersDTO;
 import org.example.gym_web_app.model.Users;
 import org.example.gym_web_app.repository.UsersRepository;
+import org.example.gym_web_app.util.UsersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsersService {
@@ -19,34 +22,35 @@ public class UsersService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public List<Users> getAllUsers() {
-        return userRepository.findAll();
+    public List<UsersDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(UsersMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Users> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<UsersDTO> getUserById(Long id) {
+        return userRepository.findById(id).map(UsersMapper::toDTO);
     }
 
-    public Users addUser(Users user) {
-        validateUser(user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public UsersDTO addUser(UsersDTO userDTO) {
+        Users user = UsersMapper.toEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(userDTO.getUsername())); // Password handling
+        Users savedUser = userRepository.save(user);
+        return UsersMapper.toDTO(savedUser);
     }
 
-    public Users updateUser(Long id, Users userDetails) {
+    public UsersDTO updateUser(Long id, UsersDTO userDTO) {
         Optional<Users> optionalUser = userRepository.findById(id);
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found with id " + id);
         }
 
         Users user = optionalUser.get();
-        user.setUsername(userDetails.getUsername());
-        user.setEmail(userDetails.getEmail());
-        if (userDetails.getPassword() != null && !userDetails.getPassword().isBlank()) {
-            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-        }
-        user.setRoles(userDetails.getRoles());
-        return userRepository.save(user);
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        Users updatedUser = userRepository.save(user);
+        return UsersMapper.toDTO(updatedUser);
     }
 
     public boolean deleteUser(Long id) {
@@ -55,18 +59,6 @@ public class UsersService {
             return true;
         } else {
             throw new RuntimeException("User not found with id " + id);
-        }
-    }
-
-    private void validateUser(Users user) {
-        if (user.getUsername() == null || user.getUsername().isBlank()) {
-            throw new IllegalArgumentException("Username cannot be null or empty");
-        }
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or empty");
-        }
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new IllegalArgumentException("Password cannot be null or empty");
         }
     }
 
