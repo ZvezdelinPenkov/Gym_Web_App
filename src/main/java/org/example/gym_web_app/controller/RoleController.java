@@ -1,6 +1,6 @@
 package org.example.gym_web_app.controller;
 
-import org.example.gym_web_app.model.Role;
+import org.example.gym_web_app.dto.RoleDTO;
 import org.example.gym_web_app.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,31 +17,31 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping
-    public ResponseEntity<List<Role>> getAllRoles() {
-        List<Role> roles = roleService.getAllRoles();
+    public ResponseEntity<List<RoleDTO>> getAllRoles() {
+        List<RoleDTO> roles = roleService.getAllRoles();
         return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Role> getRoleById(@PathVariable Long id) {
-        Optional<Role> role = roleService.getRoleById(id);
+    public ResponseEntity<RoleDTO> getRoleById(@PathVariable Long id) {
+        Optional<RoleDTO> role = roleService.getRoleById(id);
         return role.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Role> addRole(@RequestBody Role role) {
+    public ResponseEntity<RoleDTO> addRole(@RequestBody RoleDTO roleDTO) {
         try {
-            Role createdRole = roleService.addRole(role);
+            RoleDTO createdRole = roleService.addRole(roleDTO);
             return ResponseEntity.status(201).body(createdRole);
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody Role roleDetails) {
+    public ResponseEntity<RoleDTO> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
         try {
-            Role updatedRole = roleService.updateRole(id, roleDetails);
+            RoleDTO updatedRole = roleService.updateRole(id, roleDTO);
             return ResponseEntity.ok(updatedRole);
         } catch (RuntimeException ex) {
             return ResponseEntity.notFound().build();
