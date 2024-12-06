@@ -1,12 +1,15 @@
 package org.example.gym_web_app.service;
 
+import org.example.gym_web_app.dto.ClassDTO;
 import org.example.gym_web_app.model.Class;
 import org.example.gym_web_app.repository.ClassRepository;
+import org.example.gym_web_app.util.ClassMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClassService {
@@ -14,34 +17,35 @@ public class ClassService {
     @Autowired
     private ClassRepository classRepository;
 
-
-    public List<Class> getAllClasses() {
-        return classRepository.findAll();
+    public List<ClassDTO> getAllClasses() {
+        return classRepository.findAll()
+                .stream()
+                .map(ClassMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Class> getClassById(Long id) {
-        return classRepository.findById(id);
+    public Optional<ClassDTO> getClassById(Long id) {
+        return classRepository.findById(id).map(ClassMapper::toDTO);
     }
 
-
-    public Class addClass(Class classEntity) {
-        validateClass(classEntity);
-        return classRepository.save(classEntity);
+    public ClassDTO addClass(ClassDTO classDTO) {
+        Class classEntity = ClassMapper.toEntity(classDTO);
+        Class savedClass = classRepository.save(classEntity);
+        return ClassMapper.toDTO(savedClass);
     }
 
-
-    public Class updateClass(Long id, Class classDetails) {
+    public ClassDTO updateClass(Long id, ClassDTO classDTO) {
         Optional<Class> optionalClass = classRepository.findById(id);
         if (optionalClass.isEmpty()) {
             throw new RuntimeException("Class not found with id " + id);
         }
 
-        Class existingClass = optionalClass.get();
-        existingClass.setTitle(classDetails.getTitle());
-        existingClass.setDuration(classDetails.getDuration());
-        existingClass.setMaxParticipants(classDetails.getMaxParticipants());
-        existingClass.setInstructor(classDetails.getInstructor());
-        return classRepository.save(existingClass);
+        Class classEntity = optionalClass.get();
+        classEntity.setTitle(classDTO.getTitle());
+        classEntity.setDuration(classDTO.getDuration());
+        classEntity.setMaxParticipants(classDTO.getMaxParticipants());
+        Class updatedClass = classRepository.save(classEntity);
+        return ClassMapper.toDTO(updatedClass);
     }
 
     public boolean deleteClass(Long id) {
@@ -50,18 +54,6 @@ public class ClassService {
             return true;
         } else {
             throw new RuntimeException("Class not found with id " + id);
-        }
-    }
-
-    private void validateClass(Class classEntity) {
-        if (classEntity.getTitle() == null || classEntity.getTitle().isBlank()) {
-            throw new IllegalArgumentException("Class title cannot be null or empty");
-        }
-        if (classEntity.getDuration() <= 0) {
-            throw new IllegalArgumentException("Class duration must be greater than 0");
-        }
-        if (classEntity.getMaxParticipants() <= 0) {
-            throw new IllegalArgumentException("Max participants must be greater than 0");
         }
     }
 }
