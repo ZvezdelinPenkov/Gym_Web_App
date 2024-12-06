@@ -2,8 +2,8 @@ package org.example.gym_web_app.repository;
 
 import org.example.gym_web_app.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends JpaRepository<Users, Long> {
-    Optional<Users> findByUsername(String username);
+@Repository
+public interface UsersRepository extends JpaRepository<Users, Long> {
 }

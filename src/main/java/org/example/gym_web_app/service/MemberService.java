@@ -1,5 +1,7 @@
 package org.example.gym_web_app.service;
 
+import org.example.gym_web_app.dto.MemberDTO;
+import org.example.gym_web_app.util.MemberMapper;
 import org.example.gym_web_app.model.Member;
 import org.example.gym_web_app.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
@@ -14,39 +17,44 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    public List<Member> getAllMembers() {
-        return memberRepository.findAll();
+    public List<MemberDTO> getAllMembers() {
+        return memberRepository.findAll()
+                .stream()
+                .map(MemberMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Member> getMemberById(Long id) {
-        return memberRepository.findById(id);
+    public Optional<MemberDTO> getMemberById(Long id) {
+        return memberRepository.findById(id).map(MemberMapper::toDTO);
     }
 
-    public Member addMember(Member member) {
-        if (member.getEmail() == null || member.getFirstName() == null || member.getLastName() == null) {
-            throw new IllegalArgumentException("Member details are incomplete");
-        }
-        return memberRepository.save(member);
+    public MemberDTO addMember(MemberDTO memberDTO) {
+        Member member = MemberMapper.toEntity(memberDTO);
+        Member savedMember = memberRepository.save(member);
+        return MemberMapper.toDTO(savedMember);
     }
 
-    public Member updateMember(Long id, Member memberDetails) {
+    public MemberDTO updateMember(Long id, MemberDTO memberDTO) {
         Optional<Member> optionalMember = memberRepository.findById(id);
-        if (optionalMember.isPresent()) {
-            Member member = optionalMember.get();
-            member.setFirstName(memberDetails.getFirstName());
-            member.setLastName(memberDetails.getLastName());
-            member.setEmail(memberDetails.getEmail());
-            member.setDateOfBirth(memberDetails.getDateOfBirth());
-            member.setMembershipType(memberDetails.getMembershipType());
-            return memberRepository.save(member);
-        } else {
+        if (optionalMember.isEmpty()) {
             throw new RuntimeException("Member not found with id " + id);
         }
+
+        Member member = optionalMember.get();
+        member.setFirstName(memberDTO.getFirstName());
+        member.setLastName(memberDTO.getLastName());
+        member.setEmail(memberDTO.getEmail());
+        member.setDateOfBirth(memberDTO.getDateOfBirth());
+        member.setMembershipType(memberDTO.getMembershipType());
+        member.setActive(memberDTO.isActive());
+        Member updatedMember = memberRepository.save(member);
+        return MemberMapper.toDTO(updatedMember);
     }
 
-    public void deleteMember(Long id) {
+    public boolean deleteMember(Long id) {
         if (memberRepository.existsById(id)) {
             memberRepository.deleteById(id);
+            return true;
         } else {
             throw new RuntimeException("Member not found with id " + id);
         }
