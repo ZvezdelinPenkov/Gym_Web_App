@@ -18,6 +18,7 @@ public class ClassSchedule {
     @Column(nullable = false)
     private LocalDate date;
 
+
     @Column(nullable = false, name = "start_time")
     private LocalTime startTime;
 
