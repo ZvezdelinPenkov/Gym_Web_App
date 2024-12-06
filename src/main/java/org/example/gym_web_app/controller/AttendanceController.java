@@ -1,6 +1,6 @@
 package org.example.gym_web_app.controller;
 
-import org.example.gym_web_app.model.Attendance;
+import org.example.gym_web_app.dto.AttendanceDTO;
 import org.example.gym_web_app.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,31 +17,31 @@ public class AttendanceController {
     private AttendanceService attendanceService;
 
     @GetMapping
-    public ResponseEntity<List<Attendance>> getAllAttendances() {
-        List<Attendance> attendances = attendanceService.getAllAttendances();
+    public ResponseEntity<List<AttendanceDTO>> getAllAttendances() {
+        List<AttendanceDTO> attendances = attendanceService.getAllAttendances();
         return ResponseEntity.ok(attendances);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Attendance> getAttendanceById(@PathVariable Long id) {
-        Optional<Attendance> attendance = attendanceService.getAttendanceById(id);
+    public ResponseEntity<AttendanceDTO> getAttendanceById(@PathVariable Long id) {
+        Optional<AttendanceDTO> attendance = attendanceService.getAttendanceById(id);
         return attendance.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Attendance> addAttendance(@RequestBody Attendance attendance) {
+    public ResponseEntity<AttendanceDTO> addAttendance(@RequestBody AttendanceDTO attendanceDTO) {
         try {
-            Attendance createdAttendance = attendanceService.addAttendance(attendance);
+            AttendanceDTO createdAttendance = attendanceService.addAttendance(attendanceDTO);
             return ResponseEntity.status(201).body(createdAttendance);
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Attendance> updateAttendance(@PathVariable Long id, @RequestBody Attendance attendanceDetails) {
+    public ResponseEntity<AttendanceDTO> updateAttendance(@PathVariable Long id, @RequestBody AttendanceDTO attendanceDTO) {
         try {
-            Attendance updatedAttendance = attendanceService.updateAttendance(id, attendanceDetails);
+            AttendanceDTO updatedAttendance = attendanceService.updateAttendance(id, attendanceDTO);
             return ResponseEntity.ok(updatedAttendance);
         } catch (RuntimeException ex) {
             return ResponseEntity.notFound().build();
