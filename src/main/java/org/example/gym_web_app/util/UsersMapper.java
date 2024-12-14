@@ -1,6 +1,7 @@
 package org.example.gym_web_app.util;
 
 import org.example.gym_web_app.dto.UsersDTO;
+import org.example.gym_web_app.model.Role;
 import org.example.gym_web_app.model.Users;
 
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ public class UsersMapper {
         dto.setEmail(user.getEmail());
         dto.setRoleIds(
                 user.getRoles().stream()
-                        .map(role -> role.getId())
+                        .map(Role::getId)
                         .collect(Collectors.toSet())
         );
         return dto;
