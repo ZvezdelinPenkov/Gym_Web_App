@@ -7,6 +7,7 @@ public class UsersDTO {
     private Long id;
     private String username;
     private String email;
+    private String password; // Added field for password
     private Set<Long> roleIds; // List of associated Role IDs
 
     // Getters and Setters
@@ -32,6 +33,14 @@ public class UsersDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() { // Newly added getter for password
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Set<Long> getRoleIds() {
