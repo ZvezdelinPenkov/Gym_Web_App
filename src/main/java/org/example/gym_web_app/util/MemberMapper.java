@@ -1,6 +1,7 @@
 package org.example.gym_web_app.util;
 
 import org.example.gym_web_app.dto.MemberDTO;
+import org.example.gym_web_app.model.ClassSchedule;
 import org.example.gym_web_app.model.Member;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class MemberMapper {
         dto.setActive(member.isActive());
         dto.setClassScheduleIds(
                 member.getClassSchedules().stream()
-                        .map(schedule -> schedule.getId())
+                        .map(ClassSchedule::getId)
                         .collect(Collectors.toSet())
         );
         dto.setUserId(member.getUser() != null ? member.getUser().getId() : null);
@@ -38,7 +39,7 @@ public class MemberMapper {
         member.setJoinDate(dto.getJoinDate());
         member.setMembershipType(dto.getMembershipType());
         member.setActive(dto.isActive());
-        // Note: ClassSchedules and User should be set based on business logic or fetched separately.
+
         return member;
     }
 }
