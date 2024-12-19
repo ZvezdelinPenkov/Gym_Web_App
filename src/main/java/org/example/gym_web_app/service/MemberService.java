@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,10 +63,11 @@ public class MemberService {
         return MemberMapper.toDTO(updatedMember);
     }
 
-    public void deleteMember(Long id) {
+    public boolean deleteMember(Long id) {
         if (!memberRepository.existsById(id)) {
             throw new ResourceNotFoundException("Member not found with id: " + id);
         }
         memberRepository.deleteById(id);
+        return false;
     }
 }
