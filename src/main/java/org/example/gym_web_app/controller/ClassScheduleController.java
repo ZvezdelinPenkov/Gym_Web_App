@@ -24,7 +24,7 @@ public class ClassScheduleController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClassScheduleDTO> getScheduleById(@PathVariable Long id) {
-        Optional<ClassScheduleDTO> schedule = classScheduleService.getScheduleById(id);
+        Optional<ClassScheduleDTO> schedule = Optional.ofNullable(classScheduleService.getScheduleById(id));
         return schedule.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
