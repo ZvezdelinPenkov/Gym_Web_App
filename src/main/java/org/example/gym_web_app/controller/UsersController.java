@@ -24,7 +24,7 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UsersDTO> getUserById(@PathVariable Long id) {
-        Optional<UsersDTO> user = usersService.getUserById(id);
+        Optional<UsersDTO> user = Optional.ofNullable(usersService.getUserById(id));
         return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
