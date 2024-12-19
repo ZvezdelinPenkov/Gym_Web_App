@@ -3,14 +3,13 @@ package org.example.gym_web_app.service;
 import org.example.gym_web_app.dto.UsersDTO;
 import org.example.gym_web_app.model.Users;
 import org.example.gym_web_app.repository.UsersRepository;
-import org.example.gym_web_app.util.UsersMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,13 +47,13 @@ class UsersServiceTest {
 
     @Test
     void testGetAllUsers() {
-        when(usersRepository.findAll()).thenReturn(Arrays.asList(testUser));
+        when(usersRepository.findAll()).thenReturn(Collections.singletonList(testUser));
 
         List<UsersDTO> result = usersService.getAllUsers();
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("testuser", result.get(0).getUsername());
+        assertEquals("testuser", result.getFirst().getUsername());
         verify(usersRepository, times(1)).findAll();
     }
 
