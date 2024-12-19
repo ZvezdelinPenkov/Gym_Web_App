@@ -63,24 +63,30 @@ class MemberControllerTest {
 
     @Test
     void getMemberById_shouldReturnMemberIfExists() throws Exception {
-        when(memberService.getMemberById(1L)).thenReturn(Optional.of(testMemberDTO));
+        // Mock service response to directly return MemberDTO
+        when(memberService.getMemberById(1L)).thenReturn(testMemberDTO);
 
+        // Perform GET request
         mockMvc.perform(get("/api/members/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.email").value("john.doe@example.com"));
 
+        // Verify service interaction
         verify(memberService, times(1)).getMemberById(1L);
     }
 
     @Test
     void getMemberById_shouldReturn404IfNotExists() throws Exception {
-        when(memberService.getMemberById(1L)).thenReturn(Optional.empty());
+        // Mock service response to return null
+        when(memberService.getMemberById(1L)).thenReturn(null);
 
+        // Perform GET request
         mockMvc.perform(get("/api/members/1"))
                 .andExpect(status().isNotFound());
 
+        // Verify service interaction
         verify(memberService, times(1)).getMemberById(1L);
     }
 
