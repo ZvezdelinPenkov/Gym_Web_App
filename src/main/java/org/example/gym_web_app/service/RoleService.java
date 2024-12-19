@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,10 +55,11 @@ public class RoleService {
         return RoleMapper.toDTO(updatedRole);
     }
 
-    public void deleteRole(Long id) {
+    public boolean deleteRole(Long id) {
         if (!roleRepository.existsById(id)) {
             throw new ResourceNotFoundException("Role not found with id: " + id);
         }
         roleRepository.deleteById(id);
+        return false;
     }
 }
