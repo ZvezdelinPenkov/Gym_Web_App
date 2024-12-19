@@ -4,7 +4,6 @@ import org.example.gym_web_app.dto.ClassScheduleDTO;
 import org.example.gym_web_app.model.Class;
 import org.example.gym_web_app.model.ClassSchedule;
 import org.example.gym_web_app.repository.ClassScheduleRepository;
-import org.example.gym_web_app.util.ClassScheduleMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,7 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,13 +51,13 @@ class ClassScheduleServiceTest {
 
     @Test
     void testGetAllSchedules() {
-        when(classScheduleRepository.findAll()).thenReturn(Arrays.asList(testSchedule));
+        when(classScheduleRepository.findAll()).thenReturn(Collections.singletonList(testSchedule));
 
         List<ClassScheduleDTO> result = classScheduleService.getAllSchedules();
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(LocalDate.now(), result.get(0).getDate());
+        assertEquals(LocalDate.now(), result.getFirst().getDate());
         verify(classScheduleRepository, times(1)).findAll();
     }
 
@@ -66,7 +65,7 @@ class ClassScheduleServiceTest {
     void testGetScheduleById() {
         when(classScheduleRepository.findById(1L)).thenReturn(Optional.of(testSchedule));
 
-        Optional<ClassScheduleDTO> result = classScheduleService.getScheduleById(1L);
+        Optional<ClassScheduleDTO> result = Optional.ofNullable(classScheduleService.getScheduleById(1L));
 
         assertTrue(result.isPresent());
         assertEquals(LocalTime.of(10, 0), result.get().getStartTime());
@@ -77,7 +76,7 @@ class ClassScheduleServiceTest {
     void testGetScheduleById_NotFound() {
         when(classScheduleRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Optional<ClassScheduleDTO> result = classScheduleService.getScheduleById(1L);
+        Optional<ClassScheduleDTO> result = Optional.ofNullable(classScheduleService.getScheduleById(1L));
 
         assertFalse(result.isPresent());
         verify(classScheduleRepository, times(1)).findById(1L);
