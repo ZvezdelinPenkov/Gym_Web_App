@@ -24,7 +24,7 @@ public class ClassController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClassDTO> getClassById(@PathVariable Long id) {
-        Optional<ClassDTO> classEntity = classService.getClassById(id);
+        Optional<ClassDTO> classEntity = Optional.ofNullable(classService.getClassById(id));
         return classEntity.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
