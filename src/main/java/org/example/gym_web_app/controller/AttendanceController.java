@@ -24,7 +24,7 @@ public class AttendanceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AttendanceDTO> getAttendanceById(@PathVariable Long id) {
-        Optional<AttendanceDTO> attendance = attendanceService.getAttendanceById(id);
+        Optional<AttendanceDTO> attendance = Optional.ofNullable(attendanceService.getAttendanceById(id));
         return attendance.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
