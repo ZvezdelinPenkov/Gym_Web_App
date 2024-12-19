@@ -62,7 +62,7 @@ class UsersServiceTest {
     void testGetUserById() {
         when(usersRepository.findById(1L)).thenReturn(Optional.of(testUser));
 
-        Optional<UsersDTO> result = usersService.getUserById(1L);
+        Optional<UsersDTO> result = Optional.ofNullable(usersService.getUserById(1L));
 
         assertTrue(result.isPresent());
         assertEquals("testuser", result.get().getUsername());
@@ -73,7 +73,7 @@ class UsersServiceTest {
     void testGetUserById_NotFound() {
         when(usersRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Optional<UsersDTO> result = usersService.getUserById(1L);
+        Optional<UsersDTO> result = Optional.ofNullable(usersService.getUserById(1L));
 
         assertFalse(result.isPresent());
         verify(usersRepository, times(1)).findById(1L);
