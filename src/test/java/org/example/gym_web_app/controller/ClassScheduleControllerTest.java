@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,26 +57,36 @@ class ClassScheduleControllerTest {
 
     @Test
     void testGetScheduleById() {
-        when(classScheduleService.getScheduleById(1L)).thenReturn(Optional.of(testScheduleDTO));
+        // Mock service response to return a ClassScheduleDTO directly
+        when(classScheduleService.getScheduleById(1L)).thenReturn(testScheduleDTO);
 
+        // Perform the request
         ResponseEntity<ClassScheduleDTO> response = classScheduleController.getScheduleById(1L);
 
+        // Assertions
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(LocalTime.of(10, 0), response.getBody().getStartTime());
+
+        // Verify interaction with the mock
         verify(classScheduleService, times(1)).getScheduleById(1L);
     }
 
     @Test
     void testGetScheduleById_NotFound() {
-        when(classScheduleService.getScheduleById(1L)).thenReturn(Optional.empty());
+        // Mock service response to return null
+        when(classScheduleService.getScheduleById(1L)).thenReturn(null);
 
+        // Perform the request
         ResponseEntity<ClassScheduleDTO> response = classScheduleController.getScheduleById(1L);
 
+        // Assertions
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
+
+        // Verify interaction with the mock
         verify(classScheduleService, times(1)).getScheduleById(1L);
     }
 
