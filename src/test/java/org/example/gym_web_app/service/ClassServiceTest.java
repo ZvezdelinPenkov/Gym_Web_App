@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,13 +49,13 @@ class ClassServiceTest {
 
     @Test
     void testGetAllClasses() {
-        when(classRepository.findAll()).thenReturn(Arrays.asList(testClass));
+        when(classRepository.findAll()).thenReturn(Collections.singletonList(testClass));
 
         List<ClassDTO> result = classService.getAllClasses();
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Yoga", result.get(0).getTitle());
+        assertEquals("Yoga", result.getFirst().getTitle());
         verify(classRepository, times(1)).findAll();
     }
 
@@ -63,7 +63,7 @@ class ClassServiceTest {
     void testGetClassById() {
         when(classRepository.findById(1L)).thenReturn(Optional.of(testClass));
 
-        Optional<ClassDTO> result = classService.getClassById(1L);
+        Optional<ClassDTO> result = Optional.ofNullable(classService.getClassById(1L));
 
         assertTrue(result.isPresent());
         assertEquals("Yoga", result.get().getTitle());
@@ -74,7 +74,7 @@ class ClassServiceTest {
     void testGetClassById_NotFound() {
         when(classRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Optional<ClassDTO> result = classService.getClassById(1L);
+        Optional<ClassDTO> result = Optional.ofNullable(classService.getClassById(1L));
 
         assertFalse(result.isPresent());
         verify(classRepository, times(1)).findById(1L);
