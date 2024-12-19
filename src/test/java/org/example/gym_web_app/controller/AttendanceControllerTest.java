@@ -11,9 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +42,7 @@ class AttendanceControllerTest {
 
     @Test
     void testGetAllAttendances() {
-        when(attendanceService.getAllAttendances()).thenReturn(Arrays.asList(testAttendanceDTO));
+        when(attendanceService.getAllAttendances()).thenReturn(Collections.singletonList(testAttendanceDTO));
 
         ResponseEntity<List<AttendanceDTO>> response = attendanceController.getAllAttendances();
 
@@ -51,32 +50,42 @@ class AttendanceControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
-        assertEquals(1L, response.getBody().get(0).getId());
+        assertEquals(1L, response.getBody().getFirst().getId());
         verify(attendanceService, times(1)).getAllAttendances();
     }
 
     @Test
     void testGetAttendanceById() {
-        when(attendanceService.getAttendanceById(1L)).thenReturn(Optional.of(testAttendanceDTO));
+        // Mock service response to directly return the testAttendanceDTO
+        when(attendanceService.getAttendanceById(1L)).thenReturn(testAttendanceDTO);
 
+        // Perform the request
         ResponseEntity<AttendanceDTO> response = attendanceController.getAttendanceById(1L);
 
+        // Assertions
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1L, response.getBody().getId());
+
+        // Verify interaction with the mock
         verify(attendanceService, times(1)).getAttendanceById(1L);
     }
 
     @Test
     void testGetAttendanceById_NotFound() {
-        when(attendanceService.getAttendanceById(1L)).thenReturn(Optional.empty());
+        // Mock service response to return null
+        when(attendanceService.getAttendanceById(1L)).thenReturn(null);
 
+        // Perform the request
         ResponseEntity<AttendanceDTO> response = attendanceController.getAttendanceById(1L);
 
+        // Assertions
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
+
+        // Verify interaction with the mock
         verify(attendanceService, times(1)).getAttendanceById(1L);
     }
 
