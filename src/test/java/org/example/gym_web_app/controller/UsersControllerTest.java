@@ -10,12 +10,12 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class UsersControllerTest {
@@ -41,7 +41,7 @@ class UsersControllerTest {
 
     @Test
     void testGetAllUsers() {
-        when(usersService.getAllUsers()).thenReturn(Arrays.asList(testUserDTO));
+        when(usersService.getAllUsers()).thenReturn(Collections.singletonList(testUserDTO));
 
         ResponseEntity<List<UsersDTO>> response = usersController.getAllUsers();
 
@@ -49,13 +49,13 @@ class UsersControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
-        assertEquals("testuser", response.getBody().get(0).getUsername());
+        assertEquals("testuser", response.getBody().getFirst().getUsername());
         verify(usersService, times(1)).getAllUsers();
     }
 
     @Test
-    void testGetUserById() {
-        when(usersService.getUserById(1L)).thenReturn(Optional.of(testUserDTO));
+    void testGetUserById_Found() {
+        when(usersService.getUserById(1L)).thenReturn(testUserDTO); // Directly return UsersDTO
 
         ResponseEntity<UsersDTO> response = usersController.getUserById(1L);
 
@@ -68,7 +68,7 @@ class UsersControllerTest {
 
     @Test
     void testGetUserById_NotFound() {
-        when(usersService.getUserById(1L)).thenReturn(Optional.empty());
+        when(usersService.getUserById(1L)).thenReturn(null); // Return null to simulate not found
 
         ResponseEntity<UsersDTO> response = usersController.getUserById(1L);
 
@@ -79,7 +79,7 @@ class UsersControllerTest {
     }
 
     @Test
-    void testAddUser() {
+    void testAddUser_Success() {
         when(usersService.addUser(any(UsersDTO.class))).thenReturn(testUserDTO);
 
         ResponseEntity<UsersDTO> response = usersController.addUser(testUserDTO);
@@ -104,7 +104,7 @@ class UsersControllerTest {
     }
 
     @Test
-    void testUpdateUser() {
+    void testUpdateUser_Success() {
         when(usersService.updateUser(eq(1L), any(UsersDTO.class))).thenReturn(testUserDTO);
 
         ResponseEntity<UsersDTO> response = usersController.updateUser(1L, testUserDTO);
@@ -129,7 +129,7 @@ class UsersControllerTest {
     }
 
     @Test
-    void testDeleteUser() {
+    void testDeleteUser_Success() {
         when(usersService.deleteUser(1L)).thenReturn(true);
 
         ResponseEntity<Void> response = usersController.deleteUser(1L);

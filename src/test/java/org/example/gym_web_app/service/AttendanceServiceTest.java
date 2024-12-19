@@ -5,7 +5,6 @@ import org.example.gym_web_app.model.Attendance;
 import org.example.gym_web_app.model.ClassSchedule;
 import org.example.gym_web_app.model.Member;
 import org.example.gym_web_app.repository.AttendanceRepository;
-import org.example.gym_web_app.util.AttendanceMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,13 +56,13 @@ class AttendanceServiceTest {
 
     @Test
     void testGetAllAttendances() {
-        when(attendanceRepository.findAll()).thenReturn(Arrays.asList(testAttendance));
+        when(attendanceRepository.findAll()).thenReturn(Collections.singletonList(testAttendance));
 
         List<AttendanceDTO> result = attendanceService.getAllAttendances();
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(1L, result.get(0).getId());
+        assertEquals(1L, result.getFirst().getId());
         verify(attendanceRepository, times(1)).findAll();
     }
 
@@ -70,7 +70,7 @@ class AttendanceServiceTest {
     void testGetAttendanceById() {
         when(attendanceRepository.findById(1L)).thenReturn(Optional.of(testAttendance));
 
-        Optional<AttendanceDTO> result = attendanceService.getAttendanceById(1L);
+        Optional<AttendanceDTO> result = Optional.ofNullable(attendanceService.getAttendanceById(1L));
 
         assertTrue(result.isPresent());
         assertEquals(1L, result.get().getId());
@@ -81,7 +81,7 @@ class AttendanceServiceTest {
     void testGetAttendanceById_NotFound() {
         when(attendanceRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Optional<AttendanceDTO> result = attendanceService.getAttendanceById(1L);
+        Optional<AttendanceDTO> result = Optional.ofNullable(attendanceService.getAttendanceById(1L));
 
         assertFalse(result.isPresent());
         verify(attendanceRepository, times(1)).findById(1L);

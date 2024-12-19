@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,12 +41,12 @@ class MemberServiceTest {
 
     @Test
     void getAllMembers_shouldReturnListOfMembers() {
-        when(memberRepository.findAll()).thenReturn(Arrays.asList(testMember));
+        when(memberRepository.findAll()).thenReturn(Collections.singletonList(testMember));
 
         List<MemberDTO> members = memberService.getAllMembers();
 
         assertEquals(1, members.size());
-        assertEquals(testMember.getEmail(), members.get(0).getEmail());
+        assertEquals(testMember.getEmail(), members.getFirst().getEmail());
         verify(memberRepository, times(1)).findAll();
     }
 
@@ -54,7 +54,7 @@ class MemberServiceTest {
     void getMemberById_shouldReturnMemberIfExists() {
         when(memberRepository.findById(1L)).thenReturn(Optional.of(testMember));
 
-        Optional<MemberDTO> result = memberService.getMemberById(1L);
+        Optional<MemberDTO> result = Optional.ofNullable(memberService.getMemberById(1L));
 
         assertTrue(result.isPresent());
         assertEquals(testMember.getEmail(), result.get().getEmail());
@@ -65,7 +65,7 @@ class MemberServiceTest {
     void getMemberById_shouldReturnEmptyIfNotExists() {
         when(memberRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Optional<MemberDTO> result = memberService.getMemberById(1L);
+        Optional<MemberDTO> result = Optional.ofNullable(memberService.getMemberById(1L));
 
         assertTrue(result.isEmpty());
         verify(memberRepository, times(1)).findById(1L);

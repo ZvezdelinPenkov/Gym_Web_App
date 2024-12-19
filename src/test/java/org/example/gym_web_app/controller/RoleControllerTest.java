@@ -5,7 +5,6 @@ import org.example.gym_web_app.dto.RoleDTO;
 import org.example.gym_web_app.service.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -58,8 +56,8 @@ class RoleControllerTest {
 
     @Test
     void testGetRoleById() throws Exception {
-        // Mock service response
-        when(roleService.getRoleById(1L)).thenReturn(Optional.of(roleDTO));
+        // Mock service response with a RoleDTO
+        when(roleService.getRoleById(1L)).thenReturn(roleDTO); // Directly return RoleDTO
 
         // Perform GET request
         mockMvc.perform(get("/api/roles/1")
@@ -74,8 +72,8 @@ class RoleControllerTest {
 
     @Test
     void testGetRoleById_NotFound() throws Exception {
-        // Mock service response
-        when(roleService.getRoleById(1L)).thenReturn(Optional.empty());
+        // Mock service response to return null
+        when(roleService.getRoleById(1L)).thenReturn(null); // Return null to simulate not found
 
         // Perform GET request
         mockMvc.perform(get("/api/roles/1")

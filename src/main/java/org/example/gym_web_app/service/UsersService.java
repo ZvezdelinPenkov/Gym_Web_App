@@ -1,28 +1,26 @@
 package org.example.gym_web_app.service;
 
 import org.example.gym_web_app.dto.UsersDTO;
+import org.example.gym_web_app.exception.DuplicateResourceException;
+import org.example.gym_web_app.exception.ResourceNotFoundException;
 import org.example.gym_web_app.model.Role;
 import org.example.gym_web_app.model.Users;
 import org.example.gym_web_app.repository.UsersRepository;
 import org.example.gym_web_app.repository.RoleRepository;
 import org.example.gym_web_app.util.UsersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.Collections;
-
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UsersService {
 
     @Autowired
     private UsersRepository userRepository;
-
 
     @Autowired
     private RoleRepository roleRepository;
@@ -37,44 +35,53 @@ public class UsersService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<UsersDTO> getUserById(Long id) {
-        return userRepository.findById(id).map(UsersMapper::toDTO);
+    public UsersDTO getUserById(Long id) {
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        return UsersMapper.toDTO(user);
     }
 
     public Users register(UsersDTO userDTO) {
-        // Check if the user already exists
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("Username already exists");
+            throw new DuplicateResourceException("Username already exists: " + userDTO.getUsername());
         }
 
         Role memberRole = roleRepository.findByName("MEMBER")
-                .orElseThrow(() -> new RuntimeException("Role MEMBER not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Role MEMBER not found"));
 
-
-        // Create and save the new user
         Users user = new Users();
         user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRoles(Collections.singleton(memberRole));
 
         return userRepository.save(user);
     }
 
-
     public UsersDTO addUser(UsersDTO userDTO) {
+        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new DuplicateResourceException("Username already exists: " + userDTO.getUsername());
+        }
+
+        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new DuplicateResourceException("Email already exists: " + userDTO.getEmail());
+        }
+
         Users user = UsersMapper.toEntity(userDTO);
-        user.setPassword(passwordEncoder.encode(userDTO.getUsername())); // Password handling
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         Users savedUser = userRepository.save(user);
         return UsersMapper.toDTO(savedUser);
     }
 
     public UsersDTO updateUser(Long id, UsersDTO userDTO) {
-        Optional<Users> optionalUser = userRepository.findById(id);
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with id " + id);
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+
+        if (!user.getUsername().equals(userDTO.getUsername()) &&
+                userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new DuplicateResourceException("Username already exists: " + userDTO.getUsername());
         }
 
-        Users user = optionalUser.get();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         Users updatedUser = userRepository.save(user);
@@ -82,16 +89,10 @@ public class UsersService {
     }
 
     public boolean deleteUser(Long id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            return true;
-        } else {
-            throw new RuntimeException("User not found with id " + id);
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User not found with id: " + id);
         }
-    }
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        userRepository.deleteById(id);
+        return false;
     }
 }

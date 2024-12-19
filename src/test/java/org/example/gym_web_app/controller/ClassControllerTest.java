@@ -55,26 +55,36 @@ class ClassControllerTest {
 
     @Test
     void testGetClassById() {
-        when(classService.getClassById(1L)).thenReturn(Optional.of(testClassDTO));
+        // Mock service response to return a ClassDTO
+        when(classService.getClassById(1L)).thenReturn(testClassDTO);
 
+        // Perform the request
         ResponseEntity<ClassDTO> response = classController.getClassById(1L);
 
+        // Assertions
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("Yoga", response.getBody().getTitle());
+
+        // Verify interaction with the mock
         verify(classService, times(1)).getClassById(1L);
     }
 
     @Test
     void testGetClassById_NotFound() {
-        when(classService.getClassById(1L)).thenReturn(Optional.empty());
+        // Mock service response to return null
+        when(classService.getClassById(1L)).thenReturn(null);
 
+        // Perform the request
         ResponseEntity<ClassDTO> response = classController.getClassById(1L);
 
+        // Assertions
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
+
+        // Verify interaction with the mock
         verify(classService, times(1)).getClassById(1L);
     }
 

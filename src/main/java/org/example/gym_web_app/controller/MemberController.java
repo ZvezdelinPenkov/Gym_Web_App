@@ -22,12 +22,14 @@ public class MemberController {
         return ResponseEntity.ok(members);
     }
 
-    // Get a member by ID
     @GetMapping("/{id}")
     public ResponseEntity<MemberDTO> getMemberById(@PathVariable Long id) {
-        return memberService.getMemberById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        MemberDTO member = memberService.getMemberById(id);
+        if (member != null) {
+            return ResponseEntity.ok(member);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Add a new member

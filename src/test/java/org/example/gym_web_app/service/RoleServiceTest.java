@@ -51,7 +51,7 @@ class RoleServiceTest {
         when(roleRepository.findById(2L)).thenReturn(Optional.of(role));
 
         // Execute service call
-        Optional<RoleDTO> roleDTO = roleService.getRoleById(2L);
+        Optional<RoleDTO> roleDTO = Optional.ofNullable(roleService.getRoleById(2L));
 
         // Verify and Assert
         assertTrue(roleDTO.isPresent());
