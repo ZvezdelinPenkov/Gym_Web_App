@@ -30,6 +30,17 @@ public class AuthenticationController {
     @Autowired
     private UsersService userService;
 
+    @Autowired
+    public AuthenticationController(
+            AuthenticationManager authenticationManager,
+            JwtUtil jwtUtil,
+            CustomUserDetailsService customUserDetailsService,
+            UsersService userService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.customUserDetailsService = customUserDetailsService;
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authRequest) {
