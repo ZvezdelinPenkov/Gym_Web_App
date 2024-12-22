@@ -1,5 +1,6 @@
 package org.example.gym_web_app.service;
 
+import jakarta.transaction.Transactional;
 import org.example.gym_web_app.dto.ClassScheduleDTO;
 import org.example.gym_web_app.exception.ResourceNotFoundException;
 import org.example.gym_web_app.exception.InvalidRequestException;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ClassScheduleService {
 
     @Autowired
@@ -59,7 +61,7 @@ public class ClassScheduleService {
             throw new ResourceNotFoundException("ClassSchedule not found with id: " + id);
         }
         classScheduleRepository.deleteById(id);
-        return false;
+        return true;
     }
 
     private void validateScheduleInput(ClassScheduleDTO scheduleDTO) {
