@@ -12,7 +12,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages = {
 		"org.example.gym_web_app.controller",
 		"org.example.gym_web_app.service",
-		"org.example.gym_web_app.dto",
+		"org.example.gym_web_app.config",
+		"org.example.gym_web_app.security",
 		"org.example.gym_web_app.util"
 })
 public class GymWebAppApplication {
