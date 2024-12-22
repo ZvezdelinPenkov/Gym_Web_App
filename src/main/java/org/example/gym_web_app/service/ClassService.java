@@ -1,5 +1,6 @@
 package org.example.gym_web_app.service;
 
+import jakarta.transaction.Transactional;
 import org.example.gym_web_app.dto.ClassDTO;
 import org.example.gym_web_app.exception.ResourceNotFoundException;
 import org.example.gym_web_app.exception.InvalidRequestException;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ClassService {
 
     @Autowired
@@ -74,6 +76,6 @@ public class ClassService {
             throw new ResourceNotFoundException("Class not found with id: " + id);
         }
         classRepository.deleteById(id);
-        return false;
+        return true;
     }
 }
