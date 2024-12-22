@@ -1,5 +1,6 @@
 package org.example.gym_web_app.service;
 
+import jakarta.transaction.Transactional;
 import org.example.gym_web_app.dto.MemberDTO;
 import org.example.gym_web_app.exception.DuplicateResourceException;
 import org.example.gym_web_app.exception.InvalidRequestException;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class MemberService {
 
     @Autowired
@@ -68,6 +70,6 @@ public class MemberService {
             throw new ResourceNotFoundException("Member not found with id: " + id);
         }
         memberRepository.deleteById(id);
-        return false;
+        return true;
     }
 }
