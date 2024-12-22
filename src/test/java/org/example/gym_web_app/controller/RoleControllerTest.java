@@ -2,6 +2,7 @@ package org.example.gym_web_app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.gym_web_app.dto.RoleDTO;
+import org.example.gym_web_app.security.JwtRequestFilter;
 import org.example.gym_web_app.service.RoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,9 @@ class RoleControllerTest {
 
     @MockBean
     private RoleService roleService;
+
+    @MockBean
+    private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
     private ObjectMapper objectMapper; // Used to serialize and deserialize JSON
