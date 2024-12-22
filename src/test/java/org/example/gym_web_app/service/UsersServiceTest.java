@@ -5,9 +5,12 @@ import org.example.gym_web_app.model.Users;
 import org.example.gym_web_app.repository.UsersRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class UsersServiceTest {
 
     @InjectMocks
@@ -24,6 +28,9 @@ class UsersServiceTest {
 
     @Mock
     private UsersRepository usersRepository;
+
+    @Mock
+    private BCryptPasswordEncoder passwordEncoder;
 
     private Users testUser;
     private UsersDTO testUserDTO;
