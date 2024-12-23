@@ -33,6 +33,9 @@ public class MemberService {
                 .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + id));
         return MemberMapper.toDTO(member);
     }
+//    public Member getMemberById(Long memberId) {
+//        return memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
+//    }
 
     public MemberDTO addMember(MemberDTO memberDTO) {
         if (memberDTO.getEmail() == null || memberDTO.getFirstName() == null || memberDTO.getLastName() == null) {

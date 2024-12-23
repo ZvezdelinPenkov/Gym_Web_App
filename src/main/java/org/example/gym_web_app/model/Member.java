@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -144,4 +145,7 @@ public class Member {
     public void setUser(Users user) {
         this.user = user;
     }
+//
+//    public Optional<Object> getMemberById(Long id) {
+//    }
 }
