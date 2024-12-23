@@ -1,17 +1,18 @@
 package org.example.gym_web_app.config;
-import io.swagger.v3.oas.models.info.Info;
+
 import io.swagger.v3.oas.models.OpenAPI;
-//import org.springframework.context.annotation.Bean;
+import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class OpenApiConfig {
-//    @Bean
-    public OpenAPI customOpenAPI() {
+public class OpenAPIConfig {
+
+    @Bean
+    public OpenAPI usersMicroserviceOpenAPI() {
         return new OpenAPI()
-                .info(new Info()
-                        .title("API Documentation")
-                        .version("1.0")
-                        .description("Description of your API"));
+                .info(new Info().title("Gym Web Application API")
+                        .description("API Documentation for Gym Web Application")
+                        .version("1.0"));
     }
 }
