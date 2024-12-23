@@ -98,6 +98,7 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
    "password": "string",
    "email": "string"
  }
+```
 - **POST /api/auth/login**: Login and get JWT token
  ```json
  {
