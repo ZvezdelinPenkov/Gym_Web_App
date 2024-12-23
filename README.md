@@ -104,6 +104,7 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
    "username": "string",
    "password": "string"
  }
+```
 
 ### Members
 
@@ -118,6 +119,7 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
    "dateOfBirth": "date",
    "membershipType": "string"
 }
+```
 - **PUT /api/members/{id}**: Update member
 - **DELETE /api/members/{id}**: Delete member
 
@@ -132,6 +134,7 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
    "maxParticipants": "integer", 
    "instructorId": "long"
 }
+```
 - **PUT /api/classes/{id}**: Update class
 - **DELETE /api/classes/{id}**: Delete class
 
@@ -146,7 +149,7 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
    "startTime": "time",
    "endTime": "time"
 }
-
+```
 ### Attendance
 
 - **GET /api/attendance**: Get all attendance records
@@ -181,4 +184,4 @@ Code must include tests, documentation, and follow REST standards. Two approvals
 Questions? Open an issue! 🚀
 
 ## License
-This project is licensed under the MIT License
+This project is licensed under the MIT License.
