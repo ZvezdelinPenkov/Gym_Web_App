@@ -1,5 +1,6 @@
 package org.example.gym_web_app.service;
 
+import jakarta.transaction.Transactional;
 import org.example.gym_web_app.dto.RoleDTO;
 import org.example.gym_web_app.exception.DuplicateResourceException;
 import org.example.gym_web_app.exception.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RoleService {
 
     @Autowired
@@ -60,6 +62,6 @@ public class RoleService {
             throw new ResourceNotFoundException("Role not found with id: " + id);
         }
         roleRepository.deleteById(id);
-        return false;
+        return true;
     }
 }

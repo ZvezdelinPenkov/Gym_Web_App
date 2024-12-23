@@ -1,5 +1,6 @@
 package org.example.gym_web_app.service;
 
+import jakarta.transaction.Transactional;
 import org.example.gym_web_app.dto.AttendanceDTO;
 import org.example.gym_web_app.exception.ResourceNotFoundException;
 import org.example.gym_web_app.exception.InvalidRequestException;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class AttendanceService {
 
     @Autowired
@@ -57,7 +59,7 @@ public class AttendanceService {
             throw new ResourceNotFoundException("Attendance not found with id: " + id);
         }
         attendanceRepository.deleteById(id);
-        return false;
+        return true;
     }
 
     private void validateAttendanceInput(AttendanceDTO attendanceDTO) {

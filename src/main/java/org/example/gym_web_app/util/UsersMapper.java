@@ -4,24 +4,24 @@ import org.example.gym_web_app.dto.UsersDTO;
 import org.example.gym_web_app.model.Role;
 import org.example.gym_web_app.model.Users;
 
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 public class UsersMapper {
-
-    private UsersMapper() {
-
-    }
-
     public static UsersDTO toDTO(Users user) {
+        if (user == null) {
+            return null;
+        }
+
         UsersDTO dto = new UsersDTO();
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
-        dto.setRoleIds(
+        dto.setRoleIds(user.getRoles() != null ?
                 user.getRoles().stream()
                         .map(Role::getId)
-                        .collect(Collectors.toSet())
-        );
+                        .collect(Collectors.toSet()) :
+                new HashSet<>());
         return dto;
     }
 

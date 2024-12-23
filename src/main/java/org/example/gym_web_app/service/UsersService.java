@@ -1,5 +1,6 @@
 package org.example.gym_web_app.service;
 
+import jakarta.transaction.Transactional;
 import org.example.gym_web_app.dto.UsersDTO;
 import org.example.gym_web_app.exception.DuplicateResourceException;
 import org.example.gym_web_app.exception.ResourceNotFoundException;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UsersService {
 
     @Autowired
@@ -93,6 +95,6 @@ public class UsersService {
             throw new ResourceNotFoundException("User not found with id: " + id);
         }
         userRepository.deleteById(id);
-        return false;
+        return true;
     }
 }

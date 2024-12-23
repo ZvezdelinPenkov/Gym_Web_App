@@ -28,16 +28,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Allow public access to login and register
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // Restrict admin endpoints to ADMIN role
-                        .requestMatchers("/api/member/**").hasAnyRole("MEMBER", "TRAINER", "ADMIN") // Members and Trainers
-                        .anyRequest().authenticated() // All other requests require authentication
+                        .requestMatchers("/api/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/member/**").hasAnyRole("MEMBER", "TRAINER", "ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No session, use JWT tokens
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
