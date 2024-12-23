@@ -10,8 +10,6 @@ import org.example.gym_web_app.model.Member;
 import org.example.gym_web_app.model.ClassSchedule;
 
 import org.example.gym_web_app.repository.SignupRepository;
-import org.example.gym_web_app.service.MemberService;
-import org.example.gym_web_app.util.AttendanceMapper;
 import org.example.gym_web_app.util.ClassScheduleMapper;
 import org.example.gym_web_app.util.MemberMapper;
 import org.example.gym_web_app.util.SignupMapper;
@@ -54,26 +52,19 @@ public class SignupService {
             throw new IllegalArgumentException("Class is fully booked.");
         }
 
-        // Fetch the MemberDTO and convert it to entity
-        MemberDTO memberDTO = memberService.getMemberById(signupDTO.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("Member not found for ID: " + signupDTO.getMemberId()));
+        MemberDTO memberDTO = memberService.getMemberById(signupDTO.getMemberId());
         Member memberEntity = MemberMapper.toEntity(memberDTO);
 
-        // Fetch the ClassScheduleDTO and convert it to entity
-        ClassScheduleDTO classScheduleDTO = classScheduleService.getScheduleById(signupDTO.getClassScheduleId())
-                .orElseThrow(() -> new IllegalArgumentException("ClassSchedule not found for ID: " + signupDTO.getClassScheduleId()));
+        ClassScheduleDTO classScheduleDTO = classScheduleService.getScheduleById(signupDTO.getClassScheduleId());
         ClassSchedule classScheduleEntity = ClassScheduleMapper.toEntity(classScheduleDTO);
 
-        // Create the Signup entity
         Signup signup = new Signup();
         signup.setMember(memberEntity);
         signup.setClassSchedule(classScheduleEntity);
+        signup.setSignupTime(signupDTO.getSignupTime());
 
-        // Save the Signup entity
         Signup savedSignup = signupRepository.save(signup);
-
-        // Map the saved Signup entity back to SignupDTO
-        return mapToDTO(savedSignup);
+        return SignupMapper.toDTO(savedSignup);
     }
 
 
