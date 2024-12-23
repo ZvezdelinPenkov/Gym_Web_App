@@ -5,7 +5,7 @@ import org.example.gym_web_app.model.Signup;
 
 public class SignupMapper {
     private SignupMapper() {
-//
+
     }
     public static SignupDTO toDTO(Signup signup) {
         SignupDTO signupDTO = new SignupDTO();
@@ -27,11 +27,11 @@ public class SignupMapper {
 //        return dto;
 //    }
 
-//    public static Signup toEntity(SignupDTO dto) {
-//        Signup signup = new Signup();
-//        signup.setId(dto.getId());
-//        signup.setSignupTime(dto.getSignupTime());
-//        signup.setMember(dto.isAttended());
-//        return signup;
-//    }
+    public static Signup toEntity(SignupDTO dto) {
+        Signup signup = new Signup();
+        signup.setId(dto.getId());
+        signup.setSignupTime(dto.getSignupTime());
+
+        return signup;
+    }
 }
