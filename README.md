@@ -157,7 +157,7 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
    "classScheduleId": "long", 
    "attended": "boolean"
 }
-
+```
 ## Contributing
 
 1. Fork the project
