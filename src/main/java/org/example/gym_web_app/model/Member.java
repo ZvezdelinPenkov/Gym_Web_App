@@ -145,7 +145,5 @@ public class Member {
     public void setUser(Users user) {
         this.user = user;
     }
-//
-//    public Optional<Object> getMemberById(Long id) {
-//    }
+
 }
