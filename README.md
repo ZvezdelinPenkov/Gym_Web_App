@@ -114,6 +114,7 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
 - **POST /api/members**: Create new member
 ```json
 {
+   "id": "long"
    "firstName": "string",
    "lastName": "string", 
    "email": "string",
