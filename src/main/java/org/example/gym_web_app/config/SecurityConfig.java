@@ -36,6 +36,8 @@ public class SecurityConfig {
                                 "/api/auth/**",  // This should be first to allow registration
                                 "/api/members/**",
                                 "/api/classes/**",
+                                "/api/users/**",
+                                "/api/signups/**",
                                 "/api/roles/**",
                                 "/api/attendance/**",
                                 "/api/class-schedules/**",

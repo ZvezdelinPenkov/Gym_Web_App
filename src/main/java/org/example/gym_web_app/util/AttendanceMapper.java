@@ -1,7 +1,13 @@
 package org.example.gym_web_app.util;
 
 import org.example.gym_web_app.dto.AttendanceDTO;
+import org.example.gym_web_app.exception.ResourceNotFoundException;
 import org.example.gym_web_app.model.Attendance;
+import org.example.gym_web_app.model.ClassSchedule;
+import org.example.gym_web_app.model.Member;
+import org.example.gym_web_app.model.Users;
+import org.example.gym_web_app.repository.ClassScheduleRepository;
+import org.example.gym_web_app.repository.MemberRepository;
 
 public class AttendanceMapper {
 
@@ -19,11 +25,20 @@ public class AttendanceMapper {
         return dto;
     }
 
-    public static Attendance toEntity(AttendanceDTO dto) {
+    public static Attendance toEntity(AttendanceDTO dto, MemberRepository memberRepository, ClassScheduleRepository classScheduleRepository) {
+        Member member = memberRepository.findById(dto.getMemberId())
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id"));
+
+        ClassSchedule classSchedule = classScheduleRepository.findById(dto.getClassScheduleId())
+                .orElseThrow(() -> new ResourceNotFoundException("ClassSchedule not found with id"));
+
+
         Attendance attendance = new Attendance();
         attendance.setId(dto.getId());
         attendance.setAttendanceTime(dto.getAttendanceTime());
         attendance.setAttended(dto.isAttended());
+        attendance.setMember(member);
+        attendance.setClassSchedule(classSchedule);
         return attendance;
     }
 }

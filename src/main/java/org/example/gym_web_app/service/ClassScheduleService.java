@@ -5,6 +5,7 @@ import org.example.gym_web_app.dto.ClassScheduleDTO;
 import org.example.gym_web_app.exception.ResourceNotFoundException;
 import org.example.gym_web_app.exception.InvalidRequestException;
 import org.example.gym_web_app.model.ClassSchedule;
+import org.example.gym_web_app.repository.ClassRepository;
 import org.example.gym_web_app.repository.ClassScheduleRepository;
 import org.example.gym_web_app.util.ClassScheduleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class ClassScheduleService {
 
     @Autowired
     private ClassScheduleRepository classScheduleRepository;
+    @Autowired
+    private ClassRepository classRepository;
 
     public List<ClassScheduleDTO> getAllSchedules() {
         return classScheduleRepository.findAll()
@@ -36,7 +39,7 @@ public class ClassScheduleService {
     public ClassScheduleDTO addSchedule(ClassScheduleDTO scheduleDTO) {
         validateScheduleInput(scheduleDTO);
 
-        ClassSchedule schedule = ClassScheduleMapper.toEntity(scheduleDTO);
+        ClassSchedule schedule = ClassScheduleMapper.toEntity(scheduleDTO, classRepository);
         ClassSchedule savedSchedule = classScheduleRepository.save(schedule);
 
         return ClassScheduleMapper.toDTO(savedSchedule);

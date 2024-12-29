@@ -9,6 +9,7 @@ import org.example.gym_web_app.model.Signup;
 import org.example.gym_web_app.model.Member;
 import org.example.gym_web_app.model.ClassSchedule;
 
+import org.example.gym_web_app.repository.ClassRepository;
 import org.example.gym_web_app.repository.SignupRepository;
 import org.example.gym_web_app.util.ClassScheduleMapper;
 import org.example.gym_web_app.util.MemberMapper;
@@ -25,6 +26,9 @@ public class SignupService {
 
     @Autowired
     private SignupRepository signupRepository;
+
+    @Autowired
+    ClassRepository classRepository;
 
     @Autowired
     private MemberService memberService;  // Inject MemberService
@@ -56,7 +60,7 @@ public class SignupService {
         Member memberEntity = MemberMapper.toEntity(memberDTO);
 
         ClassScheduleDTO classScheduleDTO = classScheduleService.getScheduleById(signupDTO.getClassScheduleId());
-        ClassSchedule classScheduleEntity = ClassScheduleMapper.toEntity(classScheduleDTO);
+        ClassSchedule classScheduleEntity = ClassScheduleMapper.toEntity(classScheduleDTO, classRepository);
 
         Signup signup = new Signup();
         signup.setMember(memberEntity);

@@ -6,6 +6,8 @@ import org.example.gym_web_app.exception.ResourceNotFoundException;
 import org.example.gym_web_app.exception.InvalidRequestException;
 import org.example.gym_web_app.model.Attendance;
 import org.example.gym_web_app.repository.AttendanceRepository;
+import org.example.gym_web_app.repository.ClassScheduleRepository;
+import org.example.gym_web_app.repository.MemberRepository;
 import org.example.gym_web_app.util.AttendanceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,10 @@ public class AttendanceService {
 
     @Autowired
     private AttendanceRepository attendanceRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ClassScheduleRepository classScheduleRepository;
 
     public List<AttendanceDTO> getAllAttendances() {
         return attendanceRepository.findAll()
@@ -36,7 +42,7 @@ public class AttendanceService {
     public AttendanceDTO addAttendance(AttendanceDTO attendanceDTO) {
         validateAttendanceInput(attendanceDTO);
 
-        Attendance attendance = AttendanceMapper.toEntity(attendanceDTO);
+        Attendance attendance = AttendanceMapper.toEntity(attendanceDTO, memberRepository, classScheduleRepository);
         Attendance savedAttendance = attendanceRepository.save(attendance);
         return AttendanceMapper.toDTO(savedAttendance);
     }

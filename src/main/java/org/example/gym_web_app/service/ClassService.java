@@ -6,6 +6,7 @@ import org.example.gym_web_app.exception.ResourceNotFoundException;
 import org.example.gym_web_app.exception.InvalidRequestException;
 import org.example.gym_web_app.model.Class;
 import org.example.gym_web_app.repository.ClassRepository;
+import org.example.gym_web_app.repository.UsersRepository;
 import org.example.gym_web_app.util.ClassMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class ClassService {
 
     @Autowired
     private ClassRepository classRepository;
+    @Autowired
+    private UsersRepository usersRepository;
 
     public List<ClassDTO> getAllClasses() {
         return classRepository.findAll()
@@ -44,7 +47,7 @@ public class ClassService {
             throw new InvalidRequestException("Max participants must be greater than 0");
         }
 
-        Class classEntity = ClassMapper.toEntity(classDTO);
+        Class classEntity = ClassMapper.toEntity(classDTO, usersRepository);
         Class savedClass = classRepository.save(classEntity);
         return ClassMapper.toDTO(savedClass);
     }

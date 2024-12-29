@@ -74,4 +74,6 @@ public class ClassSchedule {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
+
+    public void setClassId(Long id){this.classEntity.setId(id); }
 }
