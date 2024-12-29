@@ -93,11 +93,15 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
 
 - **POST /api/auth/register**: Register a new user
  ```json
- {
-   "username": "string",
-   "password": "string",
-   "email": "string"
- }
+{
+  "id": 0,
+  "username": "string",
+  "email": "string",
+  "password": "string",
+  "roleIds": [
+    0
+  ]
+}
 ```
 - **POST /api/auth/login**: Login and get JWT token
  ```json
@@ -107,6 +111,56 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
  }
 ```
 
+### Users
+
+- **POST /api/users**: new user
+ ```json
+{
+  "id": 0,
+  "username": "string",
+  "email": "string",
+  "password": "string",
+  "roleIds": [
+    0
+  ]
+}
+```
+- **GET /api/users/**: Get all users
+- **GET /api/users/{id}**: Get user by ID
+- **DELETE /api/users/{id}**: DELETE user by ID
+- **PUT /api/users/{id}**: Update user data
+ ```json
+{
+  "id": 0,
+  "username": "string",
+  "email": "string",
+  "password": "string",
+  "roleIds": [
+    0
+  ]
+}
+```
+
+### Roles
+
+- **POST /api/roles**: new user
+ ```json
+{
+  "id": 0,
+  "name": "string"
+}
+```
+- **GET /api/roles/**: Get all roles
+- **GET /api/roles/{id}**: Get role by ID
+- **DELETE /api/roles/{id}**: DELETE role by ID
+- **PUT /api/roles/{id}**: Update role data
+ ```json
+{
+  "id": 0,
+  "name": "string"
+}
+```
+
 ### Members
 
 - **GET /api/members**: Get all members
@@ -114,16 +168,38 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
 - **POST /api/members**: Create new member
 ```json
 {
-   "id": "long"
-   "firstName": "string",
-   "lastName": "string", 
-   "email": "string",
-   "dateOfBirth": "date",
-   "membershipType": "string"
+  "id": 0,
+  "firstName": "string",
+  "lastName": "string",
+  "email": "string",
+  "dateOfBirth": "YYYY-MM-DD",
+  "joinDate": "YYYY-MM-DD",
+  "membershipType": "string",
+  "active": true,
+  "classScheduleIds": [
+    0
+  ],
+  "userId": 0
 }
 ```
 - **PUT /api/members/{id}**: Update member
-- **DELETE /api/members/{id}**: Delete member
+```json
+{
+"id": 0,
+"firstName": "string",
+"lastName": "string",
+"email": "string",
+"dateOfBirth": "YYYY-MM-DD",
+"joinDate": "YYYY-MM-DD",
+"membershipType": "string",
+"active": true,
+"classScheduleIds": [
+  0
+],
+"userId": 0
+}
+```
+- **DELETE /api/members/{id}**: Delete member by ID
 
 #### Classes
 - **GET /api/classes**: Get all classes
@@ -131,36 +207,102 @@ Access the application at http://localhost:8080. Use Postman or Swagger UI (http
 - **POST /api/classes**: Create new class
 ```json
 {
-   "title": "string",
-   "duration": "integer",
-   "maxParticipants": "integer", 
-   "instructorId": "long"
+  "id": 0,
+  "title": "string",
+  "duration": 0,
+  "maxParticipants": 0,
+  "instructorId": 0,
+  "scheduleIds": [
+    0
+  ]
 }
 ```
 - **PUT /api/classes/{id}**: Update class
-- **DELETE /api/classes/{id}**: Delete class
+```json
+{
+  "id": 0,
+  "title": "string",
+  "duration": 0,
+  "maxParticipants": 0,
+  "instructorId": 0,
+  "scheduleIds": [
+    0
+  ]
+}
+```
+- **DELETE /api/classes/{id}**: Delete class by ID
 
 ### Class Schedules
 
 - **GET /api/class-schedules**: Get all schedules
+- **GET /api/class-schedules/{id}**: Get schedule  by ID
 - **POST /api/class-schedules**: Create schedule
 ```json
 {
-   "classId": "long",
-   "date": "date",
-   "startTime": "time",
-   "endTime": "time"
+  "id": 0,
+  "classId": 0,
+  "date": "YYYY-MM-DD",
+  "startTime": "HH:MM:SS",
+  "endTime": "HH:MM:SS"
 }
 ```
+- **PUT /api/class-schedules/{id}**: Update schedule by ID
+```json
+{
+  "id": 0,
+  "classId": 0,
+  "date": "YYYY-MM-DD",
+  "startTime": "HH:MM:SS",
+  "endTime": "HH:MM:SS"
+}
+```
+- **DELETE /api/class-schedules/{id}**: DELETE schedule by ID
+
 ### Attendance
 
 - **GET /api/attendance**: Get all attendance records
+- **GET /api/attendance/{id}**: Get attendance record by ID
 - **POST /api/attendance**: Mark attendance
 ```json
 {
-   "memberId": "long",
-   "classScheduleId": "long", 
-   "attended": "boolean"
+  "id": 0,
+  "memberId": 0,
+  "classScheduleId": 0,
+  "attendanceTime": "YYYY-MM-DDTHH:MM:SS.NNNZ",
+  "attended": true
+}
+```
+- **PUT /api/attendance/{id}**: Update attendance by ID
+```json
+{
+  "id": 0,
+  "memberId": 0,
+  "classScheduleId": 0,
+  "attendanceTime": "YYYY-MM-DDTHH:MM:SS.NNNZ",
+  "attended": true
+}
+```
+
+### Sign Up
+
+- **GET /api/signups**: Get all signups records
+- **GET /api/signups/{id}**: Get signup record by ID
+- **POST /api/signups**: Create signup
+```json
+{
+"id": 0,
+"memberId": 0,
+"classScheduleId": 0,
+"signupTime": "YYYY-MM-DDTHH:MM:SS.NNNZ"
+}
+```
+- **PUT /api/signups/{id}**: Update signup by ID
+```json
+{
+"id": 0,
+"memberId": 0,
+"classScheduleId": 0,
+"signupTime": "YYYY-MM-DDTHH:MM:SS.NNNZ"
 }
 ```
 ## Contributing
